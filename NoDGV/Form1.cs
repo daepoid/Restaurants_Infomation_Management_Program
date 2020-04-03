@@ -107,22 +107,11 @@ namespace NoDGV
         }
 
         /// <summary>
-        /// TableLayouPanel에 
+        /// TableLayouPanel에 행을 추가하여 CheckBox와 Restaurant 정보를 추가한다.
         /// </summary>
         /// <param name="st_name"></param>
         /// <param name="st_menu"></param>
         /// <param name="st_location"></param>
-        private void add_Data_TLP(string st_name, string st_menu, string st_location)
-        {
-            Restaurant new_restaurant = new Restaurant(st_name, st_menu, st_location);
-            if (!check_DataOverlapping(new_restaurant))
-            {
-                restaurants.Add(new_restaurant);
-                add_Control_TLP(new_restaurant);
-                clear_TextBoxs();
-                clear_CheckBoxs();
-            }                      
-        }
         private void add_Data_TLP(Restaurant new_restaurant)
         {
             if (!check_DataOverlapping(new_restaurant))
@@ -156,11 +145,12 @@ namespace NoDGV
                 }
                 else
                 {
-                    if(checked_Count == 1)
+                    checked_Count--;
+                    if (checked_Count == 0)
                     {
                         clear_TextBoxs();
                     }
-                    else if(checked_Count > 1)
+                    else if(checked_Count > 0)
                     {
                         check_list.Remove(restaurant);
                         if (isSame_textBox_restaurant(restaurant))
@@ -168,13 +158,15 @@ namespace NoDGV
                             textBox1.Text = check_list[check_list.Count - 1].st_name;
                             textBox2.Text = check_list[check_list.Count - 1].st_menu;
                             textBox3.Text = check_list[check_list.Count - 1].st_location;
+                            temp = check_list[check_list.Count - 1];
                         }
+                        
                     }
                     else
                     {
-                        MessageBox.Show("ERROR");
+                        MessageBox.Show("ERROR\nReload File");
                     }
-                    checked_Count--;
+                    
                 }
             };
             checkBoxes.Add(checkbox);
@@ -230,7 +222,6 @@ namespace NoDGV
                     string[] parseLine = line.Split('|');
                     Restaurant restaurant = new Restaurant(parseLine[0], parseLine[1], parseLine[2]);
                     add_Data_TLP(restaurant);
-                    //add_Data_TLP(parseLine[0], parseLine[1], parseLine[2]);
                 }
             }
             catch (FileNotFoundException)
@@ -263,10 +254,6 @@ namespace NoDGV
 
         private void button_add_Click(object sender, EventArgs e)
         {
-            //if (restaurants.Count == 0)
-            //{
-            //    initialize_TLP(true);
-            //}
             if (textBox1.Text.Equals("") || textBox2.Text.Equals("") || textBox3.Text.Equals(""))
             {
                 MessageBox.Show("비어있는 요소가 있습니다.");
@@ -274,7 +261,6 @@ namespace NoDGV
             }
             Restaurant restaurant = new Restaurant(textBox1.Text, textBox2.Text, textBox3.Text);
             add_Data_TLP(restaurant);
-            //add_Data_TLP(textBox1.Text, textBox2.Text, textBox3.Text);
             MessageBox.Show("Add Complete");
         }
 
